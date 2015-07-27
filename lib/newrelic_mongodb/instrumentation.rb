@@ -28,26 +28,9 @@ module NewRelic
       module Mongodb
         def logging_with_newrelic_trace(messages, operation_id = nil)
           operation_name, collection_name = determine_operation_and_collection(messages.first)
-          command = Proc.new { logging_without_newrelic_trace(messages, operation_id) }
 
-          operation_type = case operation_name.to_s
-            when *%w(delete) then 'destroy'
-            when *%w(find get_more query) then 'find'
-            when *%w(insert update) then 'save'
-            else
-              nil
-            end
-
-          if operation_type
-            callback = Proc.new do |result, metric, elapsed|
-              NewRelic::Agent::Datastores.notice_statement(operation_name, elapsed)
-            end
-
-            NewRelic::Agent::Datastores.wrap('MongoDB', operation_type, collection_name, callback) do
-              command.call
-            end
-          else
-            command.call
+          NewRelic::Agent::Datastores.wrap('MongoDB', operation_name, collection_name, ->(result, metric, elapsed){ NewRelic::Agent::Datastores.notice_statement(operation_name, elapsed) }) do
+            logging_without_newrelic_trace(messages, operation_id)
           end
         end
 

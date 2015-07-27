@@ -1,6 +1,7 @@
 # New Relic Mongodb
 [![Gem Version](https://badge.fury.io/rb/newrelic_mongodb.svg)](https://badge.fury.io/rb/newrelic_mongodb.svg)
 [![Build Status](https://travis-ci.org/weeyum/newrelic_mongodb.svg)](https://travis-ci.org/weeyum/newrelic_mongodb)
+[![Coverage Status](https://coveralls.io/repos/weeyum/newrelic_mongodb/badge.svg?branch=master&service=github)](https://coveralls.io/github/weeyum/newrelic_mongodb?branch=master)
 
 New Relic instrumentation for Mongo (2.1.0) / Mongoid (5.x)
 

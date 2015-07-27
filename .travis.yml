@@ -1,10 +1,13 @@
 language: ruby
+
 rvm:
   - ruby-head
   - 2.2.1
   - 2.1.5
   - 2.0.0
   - 1.9.3
+
 services: mongodb
+
 script:
   - bundle exec rake test
