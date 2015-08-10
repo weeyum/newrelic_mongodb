@@ -21,9 +21,10 @@ class TestInstrumentation < Test::Unit::TestCase
     NewRelic::Agent.drop_buffered_data
   end
 
-  def assert_generated_metrics(types)
+  def assert_generated_metrics(types, *additional_metrics)
     expected_metrics = %w(Datastore/MongoDB/all Datastore/MongoDB/allOther Datastore/all Datastore/allOther)
     expected_metrics += types.flat_map { |type| ["Datastore/operation/MongoDB/#{type}",  "Datastore/statement/MongoDB/artists/#{type}"] }
+    expected_metrics += additional_metrics
 
     assert_metrics_recorded_exclusive(expected_metrics)
   end
@@ -118,5 +119,12 @@ class TestInstrumentation < Test::Unit::TestCase
     @client.database[:artists].find(name: 'Syd Vicious').update_one('$set' => { name: 'William Li' })
 
     assert_generated_metrics(%w(update))
+  end
+
+  def test_killcursors_generates_metrics
+    5.times { @client.database[:artists].insert_one(name: 'Syd Vicious') }
+    @client.database[:artists].find(name: 'Syd Vicious').batch_size(3).limit(4).to_a
+
+    assert_generated_metrics(%w(insert find getmore), 'Datastore/operation/MongoDB/killcursors')
   end
 end

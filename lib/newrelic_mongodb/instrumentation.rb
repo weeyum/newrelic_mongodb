@@ -38,7 +38,7 @@ module NewRelic
         def determine_operation_and_collection(message)
           operation_name = message.payload[:command_name]
 
-          collection_name = if (namespace_name = message.namespace.split('.').last) == '$cmd'
+          collection_name = if message.respond_to?(:namespace) && (namespace_name = message.namespace.split('.').last) == '$cmd'
             message.selector[operation_name]
           else
             namespace_name
