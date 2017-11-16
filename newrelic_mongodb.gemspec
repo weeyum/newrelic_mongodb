@@ -13,7 +13,7 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
   gem.version       = NewrelicMongodb::VERSION
 
-  gem.add_dependency 'newrelic_rpm', '~> 3.11'
+  gem.add_dependency 'newrelic_rpm', '>= 3.11'
   gem.add_dependency 'mongo', '>= 2.1.0.beta', '< 3'
 
   gem.add_development_dependency 'rake'
